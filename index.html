@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReWear - Community Clothing Exchange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            padding: 2rem 0;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Landing Page */
+        .hero {
+            text-align: center;
+            padding: 6rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .features {
+            background: white;
+            padding: 4rem 0;
+            margin: 4rem 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 12px;
+            background: #f8f9fa;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .carousel {
+            background: white;
+            padding: 4rem 0;
+            border-radius: 20px;
+            margin: 2rem 0;
+        }
+
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .item-card {
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #999;
+        }
+
+        .item-info {
+            padding: 1.5rem;
+        }
+
+        /* Forms */
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            background: white;
+            border-radius: 20px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .points-display {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+        }
+
+        .dashboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Item Detail */
+        .item-detail {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+
+        .item-gallery {
+            height: 400px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #999;
+        }
+
+        .item-details {
+            padding: 2rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-swapped {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            border-radius: 20px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+            background: #e74c3c;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .admin-content {
+            padding: 2rem;
+        }
+
+        .pending-items {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .pending-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .pending-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .pending-info {
+            flex: 1;
+        }
+
+        .pending-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-tabs {
+                flex-wrap: wrap;
+            }
+
+            .item-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page.active {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background: #f0f4ff;
+            border-color: #5a67d8;
+        }
+
+        .file-upload.dragover {
+            background: #e6f3ff;
+            border-color: #4299e1;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo" onclick="showPage('landing')">ReWear</a>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('browse')">Browse Items</a></li>
+                <li><a href="#" onclick="showPage('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showPage('add-item')">List Item</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <div id="auth-logged-out">
+                    <button class="btn btn-secondary" onclick="showPage('login')">Login</button>
+                    <button class="btn btn-primary" onclick="showPage('signup')">Sign Up</button>
+                </div>
+                <div id="auth-logged-in" class="hidden">
+                    <span id="user-name">Welcome, User!</span>
+                    <button class="btn btn-danger" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Landing Page -->
+        <div id="landing" class="page active">
+            <div class="container">
+                <section class="hero">
+                    <h1>Sustainable Fashion Exchange</h1>
+                    <p>Give your clothes a second life. Join our community of conscious consumers reducing textile waste through clothing swaps.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="showPage('signup')">Start Swapping</button>
+                        <button class="btn btn-secondary" onclick="showPage('browse')">Browse Items</button>
+                        <button class="btn btn-secondary" onclick="showPage('add-item')">List an Item</button>
+                    </div>
+                </section>
+
+                <section class="features">
+                    <div class="container">
+                        <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">How ReWear Works</h2>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">👕</div>
+                                <h3>List Your Items</h3>
+                                <p>Upload photos and details of clothing you no longer wear but are still in good condition.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🔄</div>
+                                <h3>Swap or Redeem</h3>
+                                <p>Exchange items directly with other users or use points to redeem clothes you love.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🌱</div>
+                                <h3>Reduce Waste</h3>
+                                <p>Every swap prevents textiles from ending up in landfills while giving clothes new life.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="carousel">
+                    <div class="container">
+                        <h2 style="text-align: center; margin-bottom: 2rem;">Featured Items</h2>
+                        <div class="carousel-container">
+                            <div class="item-card">
+                                <div class="item-image">👗</div>
+                                <div class="item-info">
+                                    <h3>Vintage Dress</h3>
+                                    <p>Size M • Like New</p>
+                                    <p>15 points</p>
+                                </div>
+                            </div>
+                            <div class="item-card">
+                                <div class="item-image">👔</div>
+                                <div class="item-info">
+                                    <h3>Business Shirt</h3>
+                                    <p>Size L • Good</p>
+                                    <p>8 points</p>
+                                </div>
+                            </div>
+                            <div class="item-card">
+                                <div class="item-image">👖</div>
+                                <div class="item-info">
+                                    <h3>Designer Jeans</h3>
+                                    <p>Size 32 • Excellent</p>
+                                    <p>20 points</p>
+                                </div>
+                            </div>
+                            <div class="item-card">
+                                <div class="item-image">🧥</div>
+                                <div class="item-info">
+                                    <h3>Winter Coat</h3>
+                                    <p>Size S • Good</p>
+                                    <p>25 points</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="page">
+            <div class="container">
+                <div class="form-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; color: #667eea;">Login to ReWear</h2>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                    </form>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        Don't have an account? <a href="#" onclick="showPage('signup')" style="color: #667eea;">Sign up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Page -->
+        <div id="signup" class="page">
+            <div class="container">
+                <div class="form-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; color: #667eea;">Join ReWear</h2>
+                    <form onsubmit="handleSignup(event)">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm">Confirm Password</label>
+                            <input type="password" id="signup-confirm" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+                    </form>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        Already have an account? <a href="#" onclick="showPage('login')" style="color: #667eea;">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="page">
+            <div class="container">
+                <div class="dashboard">
+                    <div class="dashboard-header">
+                        <h2>Your Dashboard</h2>
+                        <div class="points-display">
+                            <span id="user-points">45</span> Points
+                        </div>
+                        <p>Keep swapping to earn more points!</p>
+                    </div>
+                    <div class="dashboard-content">
+                        <div class="dashboard-tabs">
+                            <button class="tab active" onclick="showTab('profile')">Profile</button>
+                            <button class="tab" onclick="showTab('items')">My Items</button>
+                            <button class="tab" onclick="showTab('swaps')">Swaps</button>
+                        </div>
+
+                        <div id="profile-tab" class="tab-content active">
+                            <h3>Profile Information</h3>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="profile-name" value="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="profile-email" value="john@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" id="profile-location" value="New York, NY">
+                            </div>
+                            <button class="btn btn-primary">Update Profile</button>
+                        </div>
+
+                        <div id="items-tab" class="tab-content">
+                            <h3>Your Listed Items</h3>
+                            <div class="items-grid">
+                                <div class="item-card">
+                                    <div class="item-image">👕</div>
+                                    <div class="item-info">
+                                        <h4>Blue T-Shirt</h4>
+                                        <p>Size M • Good</p>
+                                        <span class="status-badge status-available">Available</span>
+                                    </div>
+                                </div>
+                                <div class="item-card">
+                                    <div class="item-image">👖</div>
+                                    <div class="item-info">
+                                        <h4>Black Jeans</h4>
+                                        <p>Size 32 • Like New</p>
+                                        <span class="status-badge status-pending">Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="swaps-tab" class="tab-content">
+                            <h3>Recent Swaps</h3>
+                            <div class="swap-list">
+                                <div class="swap-item" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h4>Traded: Red Sweater → Blue Jacket</h4>
+                                    <p>Completed 2 days ago • +15 points</p>
+                                </div>
+                                <div class="swap-item" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h4>Redeemed: Designer Shoes</h4>
+                                    <p>Completed 1 week ago • -30 points</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browse Items -->
+        <div id="browse" class="page">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: white;">Browse Available Items</h2>
+                
+                <div style="background: white; padding: 2rem; border-radius: 20px; margin-bottom: 2rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <option value="shirts">Shirts</option>
+                            <option value="pants">Pants</option>
+                            <option value="dresses">Dresses</option>
+                            <option value="outerwear">Outerwear</option>
+                            <option value="accessories">Accessories</option>
+                        </select>
+                        <select id="size-filter">
+                            <option value="">All Sizes</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                        <input type="text" id="search-input" placeholder="Search items...">
+                        <button class="btn btn-primary" onclick="filterItems()">Filter</button>
+                    </div>
+                    
+                    <div class="items-grid" id="browse-items">
+                        <div class="item-card" onclick="showItemDetail(1)">
+                            <div class="item-image">👕</div>
+                            <div class="item-info">
+                                <h4>Vintage Band T-Shirt</h4>
+                                <p>Size L • Good condition</p>
+                                <p><strong>12 points</strong></p>
+                                <span class="status-badge status-available">Available</span>
+                            </div>
+                        </div>
+                        <div class="item-card" onclick="showItemDetail(2)">
+                            <div class="item-image">👗</div>
+                            <div class="item-info">
+                                <h4>Floral Summer Dress</h4>
+                                <p>Size M • Like New</p>
+                                <p><strong>18 points</strong></p>
+                                <span class="status-badge status-available">Available</span>
+                            </div>
+                        </div>
+                        <div class="item-card" onclick="showItemDetail(3)">
+                            <div class="item-image">👖</div>
+                            <div class="item-info">
+                                <h4>High-Waisted Jeans</h4>
+                                <p>Size 28 • Excellent</p>
+                                <p><strong>22 points</strong></p>
+                                <span class="status-badge status-available">Available</span>
+                            </div>
+                        </div>
+                        <div class="item-card" onclick="showItemDetail(4)">
+                            <div class="item-image">🧥</div>
+                            <div class="item-info">
+                                <h4>Leather Jacket</h4>
+                                <p>Size S • Good</p>
+                                <p><strong>35 points</strong></p>
+                                <span class="status-badge status-available">Available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Item -->
+        <div id="add-item" class="page">
+            <div class="container">
+                <div class="form-container" style="max-width: 600px;">
+                    <h2 style="text-align: center; margin-bottom: 2rem; color: #667eea;">List New Item</h2>
+                    <form onsubmit="handleAddItem(event)">
+                        <div class="form-group">
+                            <label>Item Photos</label>
+                            <div class="file-upload" onclick="document.getElementById('item-photos').click()">
+                                <div class="upload-icon">📷</div>
+                                <p>Click to upload photos or drag and drop</p>
+                                <input type="file" id="item-photos" multiple accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-title">Item Title</label>
+                            <input type="text" id="item-title" placeholder="e.g., Vintage Denim Jacket" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-description">Description</label>
+                            <textarea id="item-description" placeholder="Describe the item's condition, style, and any special features..." required></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label for="item-category">Category</label>
+                                <select id="item-category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="shirts">Shirts</option>
+                                    <option value="pants">Pants</option>
+                                    <option value="dresses">Dresses</option>
+                                    <option value="outerwear">Outerwear</option>
+                                    <option value="accessories">Accessories</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-type">Type</label>
+                                <input type="text" id="item-type" placeholder="e.g., Casual, Formal, Vintage">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label for="item-size">Size</label>
+                                <select id="item-size" required>
+                                    <option value="">Select Size</option>
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-condition">Condition</label>
+                                <select id="item-condition" required>
+                                    <option value="">Select Condition</option>
+                                    <option value="like-new">Like New</option>
+                                    <option value="excellent">Excellent</option>
+                                                                        <option value="good">Good</option>
+                                    <option value="fair">Fair</option>
+                                    <option value="worn">Worn</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-points">Points Value</label>
+                            <input type="number" id="item-points" min="1" max="100" placeholder="Set points value (1-100)" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-location">Location</label>
+                            <input type="text" id="item-location" placeholder="Where is this item available for pickup?">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">List Item</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item Detail -->
+        <div id="item-detail" class="page">
+            <div class="container">
+                <div class="item-detail">
+                    <div class="item-gallery">
+                        <div style="text-align: center;">
+                            <div style="font-size: 5rem;">👗</div>
+                            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+                                <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px;"></div>
+                                <div style="width: 50px; height: 50px; background: #e0e0e0; border-radius: 4px;"></div>
+                                <div style="width: 50px; height: 50px; background: #d0d0d0; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <h2>Floral Summer Dress</h2>
+                        <p style="font-size: 1.2rem; color: #667eea; margin: 0.5rem 0;"><strong>18 points</strong></p>
+                        <span class="status-badge status-available">Available</span>
+                        
+                        <div style="margin: 1.5rem 0;">
+                            <h4>Details</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                <div>
+                                    <p><strong>Category:</strong> Dresses</p>
+                                    <p><strong>Size:</strong> M</p>
+                                </div>
+                                <div>
+                                    <p><strong>Condition:</strong> Like New</p>
+                                    <p><strong>Style:</strong> Casual</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 1.5rem 0;">
+                            <h4>Description</h4>
+                            <p>Beautiful floral summer dress in excellent condition. Worn only a couple times. Lightweight and perfect for warm weather. 100% cotton, machine washable.</p>
+                        </div>
+                        
+                        <div style="margin: 1.5rem 0;">
+                            <h4>Owner</h4>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%;"></div>
+                                <div>
+                                    <p><strong>Sarah J.</strong></p>
+                                    <p>New York, NY</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="item-actions">
+                            <button class="btn btn-primary" onclick="requestSwap()">Request Swap</button>
+                            <button class="btn btn-secondary" onclick="showPage('browse')">Back to Browse</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin" class="page">
+            <div class="container">
+                <div class="admin-panel">
+                    <div class="admin-header">
+                        <h2>Admin Dashboard</h2>
+                        <p>Manage users, items, and platform settings</p>
+                    </div>
+                    <div class="admin-content">
+                        <div class="dashboard-tabs">
+                            <button class="tab active" onclick="showAdminTab('pending')">Pending Items</button>
+                            <button class="tab" onclick="showAdminTab('users')">Users</button>
+                            <button class="tab" onclick="showAdminTab('reports')">Reports</button>
+                        </div>
+                        
+                        <div id="pending-tab" class="tab-content active">
+                            <h3>Items Pending Approval</h3>
+                            <div class="pending-items">
+                                <div class="pending-item">
+                                    <div style="width: 80px; height: 80px; background: #f0f0f0;"></div>
+                                    <div class="pending-info">
+                                        <h4>Leather Jacket</h4>
+                                        <p>Submitted by: user123 • 2 days ago</p>
+                                    </div>
+                                    <div class="pending-actions">
+                                        <button class="btn btn-primary" onclick="approveItem(1)">Approve</button>
+                                        <button class="btn btn-danger" onclick="rejectItem(1)">Reject</button>
+                                    </div>
+                                </div>
+                                <div class="pending-item">
+                                    <div style="width: 80px; height: 80px; background: #e0e0e0;"></div>
+                                    <div class="pending-info">
+                                        <h4>Designer Handbag</h4>
+                                        <p>Submitted by: fashionlover • 1 day ago</p>
+                                    </div>
+                                    <div class="pending-actions">
+                                        <button class="btn btn-primary" onclick="approveItem(2)">Approve</button>
+                                        <button class="btn btn-danger" onclick="rejectItem(2)">Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="users-tab" class="tab-content">
+                            <h3>User Management</h3>
+                            <p>User list and management tools would appear here.</p>
+                        </div>
+                        
+                        <div id="reports-tab" class="tab-content">
+                            <h3>Platform Reports</h3>
+                            <p>System reports and analytics would appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation state
+            if(pageId === 'landing') {
+                document.title = 'ReWear - Community Clothing Exchange';
+            } else {
+                document.title = pageId.charAt(0).toUpperCase() + pageId.slice(1) + ' | ReWear';
+            }
+        }
+        
+        // Tab navigation
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId + '-tab').classList.add('active');
+            
+            // Activate selected tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                if(tab.textContent.toLowerCase().includes(tabId)) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+        
+        // Admin tab navigation
+        function showAdminTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.admin-content .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.admin-content .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId + '-tab').classList.add('active');
+            
+            // Activate selected tab
+            document.querySelectorAll('.admin-content .tab').forEach(tab => {
+                if(tab.textContent.toLowerCase().includes(tabId)) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+        
+        // Show item detail view
+        function showItemDetail(itemId) {
+            showPage('item-detail');
+            // In a real app, we would fetch item details based on itemId
+        }
+        
+        // Request swap
+        function requestSwap() {
+            alert('Swap request sent! The owner will review your request.');
+            showPage('dashboard');
+        }
+        
+        // Approve item (admin)
+        function approveItem(itemId) {
+            alert(`Item ${itemId} approved and listed!`);
+            // In a real app, we would update the database
+        }
+        
+        // Reject item (admin)
+        function rejectItem(itemId) {
+            if(confirm('Are you sure you want to reject this item?')) {
+                alert(`Item ${itemId} rejected.`);
+                // In a real app, we would update the database
+            }
+        }
+        
+        // Form handlers
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simulate login
+            document.getElementById('auth-logged-out').classList.add('hidden');
+            document.getElementById('auth-logged-in').classList.remove('hidden');
+            document.getElementById('user-name').textContent = `Welcome, ${email.split('@')[0]}!`;
+            
+            showPage('dashboard');
+        }
+        
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            // Simulate signup
+            document.getElementById('auth-logged-out').classList.add('hidden');
+            document.getElementById('auth-logged-in').classList.remove('hidden');
+            document.getElementById('user-name').textContent = `Welcome, ${name}!`;
+            
+            showPage('dashboard');
+        }
+        
+        function handleAddItem(e) {
+            e.preventDefault();
+            alert('Item listed successfully! It will be visible after admin approval.');
+            showPage('dashboard');
+        }
+        
+        function logout() {
+            document.getElementById('auth-logged-in').classList.add('hidden');
+            document.getElementById('auth-logged-out').classList.remove('hidden');
+            showPage('landing');
+        }
+        
+        function filterItems() {
+            // In a real app, this would filter the items based on selected filters
+            alert('Filters applied! (This is a demo - filters would work in a real app)');
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in (demo purposes)
+            const loggedIn = false;
+            
+            if(loggedIn) {
+                document.getElementById('auth-logged-out').classList.add('hidden');
+                document.getElementById('auth-logged-in').classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
